@@ -1,0 +1,24 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © harisant
+
+//@version=5
+strategy("Contoh Limit Order", overlay=true,
+  initial_capital=100, currency=currency.USD, default_qty_type=strategy.percent_of_equity, default_qty_value=100, pyramiding=1,
+  commission_type=strategy.commission.percent, commission_value=0.075)
+
+bars = 60
+
+price = 0.0, price := nz(price[1])
+profit = 0.0, profit := nz(profit[1])
+
+kondisi = (bar_index % bars == 0)
+
+if kondisi
+    price := close * (1 - 0.6/100)
+    profit := close * (1 + 0.6/100)
+    strategy.entry("id", strategy.long, limit=price)
+
+strategy.exit("id", limit=profit)
+
+plot(price, color=color.orange)
+plotshape(kondisi, style=shape.diamond, location=location.bottom, color=color.green, size=size.tiny)
